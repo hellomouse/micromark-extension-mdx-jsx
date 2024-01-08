@@ -1,6 +1,6 @@
 /**
- * @typedef {import('micromark-factory-mdx-expression').Acorn} Acorn
- * @typedef {import('micromark-factory-mdx-expression').AcornOptions} AcornOptions
+ * @typedef {import('./syntax.js').Acorn} Acorn
+ * @typedef {import('acorn').Options} AcornOptions
  * @typedef {import('micromark-util-types').Code} Code
  * @typedef {import('micromark-util-types').Effects} Effects
  * @typedef {import('micromark-util-types').State} State
@@ -440,6 +440,17 @@ export function factoryTag(
       return localName
     }
 
+    // autolink hack
+    if (code === codes.slash) {
+      if (self.previous === codes.colon) {
+        // while <img:/> is technically "valid" html, it does not appear to be valid JSX
+        return nok(code);
+      }
+    } else if (code === codes.questionMark) {
+      // <scheme:?> is not valid jsx
+      return nok(code);
+    }
+
     crash(
       code,
       'before local name',
@@ -481,6 +492,11 @@ export function factoryTag(
       effects.exit(tagNameLocalType)
       returnState = localNameAfter
       return esWhitespaceStart(code)
+    }
+
+    // autolink hack: <mailto:user@> not valid jsx
+    if (code === codes.atSign) {
+      return nok(code);
     }
 
     crash(
@@ -564,6 +580,7 @@ export function factoryTag(
         tagExpressionAttributeType,
         tagExpressionAttributeMarkerType,
         tagExpressionAttributeValueType,
+        // @ts-ignore acorn type defintion issues
         acorn,
         acornOptions,
         addResult,
@@ -841,6 +858,7 @@ export function factoryTag(
         tagAttributeValueExpressionType,
         tagAttributeValueExpressionMarkerType,
         tagAttributeValueExpressionValueType,
+        // @ts-ignore acorn type definition issues
         acorn,
         acornOptions,
         addResult,

@@ -1,3 +1,39 @@
+# Modified MDX
+
+This is modified version of `micromark-extension-mdx-jsx` with a few changes.
+
+```js
+import { mdxJsx, mdastExtraJsxFlow } from 'micromark-extension-mdx-jsx';
+import { mdxExpressionFromMarkdown } from 'mdast-util-mdx-expression';
+
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import { mdxJsxFromMarkdown } from 'mdast-util-mdx-jsx';
+import { mdxExpressionFromMarkdown } from 'mdast-util-mdx-expression';
+
+export let options: any = {
+  acorn: Parser.extend(acornJsx()),
+  acornOptions: { ecmaVersion: 2024, sourceType: 'module' },
+  addResult: true,
+};
+
+export default function parse(input: string): MarkdownRoot {
+  return fromMarkdown(input, {
+    extensions: [
+      mdxJsx(options),
+      mdxExpression(options),
+    ],
+    mdastExtensions: [
+      mdxJsxFromMarkdown(),
+      // note: this extension is required or newlines may not render properly
+      mdastExtraJsxFlow,
+      mdxExpressionFromMarkdown(),
+    ],
+  });
+}
+```
+
+The original readme is reproduced below.
+
 # micromark-extension-mdx-jsx
 
 [![Build][build-badge]][build]

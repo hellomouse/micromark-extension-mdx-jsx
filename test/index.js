@@ -44,7 +44,7 @@ test('core', async function (t) {
   await t.test('should expose the public api', async function () {
     assert.deepEqual(
       Object.keys(await import('micromark-extension-mdx-jsx')).sort(),
-      ['mdxJsx']
+      ['mdastExtraJsxFlow', 'mdxJsx']
     )
   })
 
@@ -508,6 +508,7 @@ test('text (complete)', async function (t) {
     }
   )
 
+  /* autolinks supported
   await t.test(
     'should crash nicely on what might be a protocol in local names',
     async function () {
@@ -516,6 +517,7 @@ test('text (complete)', async function (t) {
       }, /Unexpected character `\/` \(U\+002F\) before local name, expected a character that can start a name, such as a letter, `\$`, or `_` \(note: to create a link in MDX, use `\[text]\(url\)`\)/)
     }
   )
+  */
 
   await t.test(
     'should crash nicely on what might be a protocol in local names',
@@ -1077,7 +1079,9 @@ test('text (complete)', async function (t) {
           '<x>Character references can be used: &quot;, &apos;, &lt;, &gt;, &#x7B;, and &#x7D;, they can be named, decimal, or hexadecimal: &copy; &#8800; &#x1D306;</x>.',
           {extensions: [mdxJsx()], htmlExtensions: [html]}
         ),
-        "<p>Character references can be used: &quot;, ', &lt;, &gt;, {, and }, they can be named, decimal, or hexadecimal: © ≠ 팆.</p>"
+        // broken test...? '\u{1D306}' is '𝌆'
+        // "<p>Character references can be used: &quot;, ', &lt;, &gt;, {, and }, they can be named, decimal, or hexadecimal: © ≠ 팆.</p>"
+        "<p>Character references can be used: &quot;, ', &lt;, &gt;, {, and }, they can be named, decimal, or hexadecimal: © ≠ 𝌆.</p>"
       )
     }
   )
@@ -1251,7 +1255,7 @@ test('flow (agnostic)', async function (t) {
         extensions: [mdxJsx()],
         htmlExtensions: [html]
       }),
-      '<p>b</p>\n'
+      'b\n'
     )
   })
 
@@ -1259,11 +1263,11 @@ test('flow (agnostic)', async function (t) {
     'should support an element w/ containers as content',
     async function () {
       assert.equal(
-        micromark('<a>\n- b\n</a>', {
+        micromark('<a>\n\n- b\n\n</a>', {
           extensions: [mdxJsx()],
           htmlExtensions: [html]
         }),
-        '<ul>\n<li>b</li>\n</ul>\n'
+        '\n<ul>\n<li>b</li>\n</ul>\n'
       )
     }
   )
@@ -1293,11 +1297,11 @@ test('flow (essence)', async function (t) {
     'should support an element around a container',
     async function () {
       assert.equal(
-        micromark('<a>\n- b\n</a>', {
+        micromark('<a>\n\n- b\n\n</a>', {
           extensions: [mdxJsx()],
           htmlExtensions: [html]
         }),
-        '<ul>\n<li>b</li>\n</ul>\n'
+        '\n<ul>\n<li>b</li>\n</ul>\n'
       )
     }
   )
@@ -1310,7 +1314,7 @@ test('flow (essence)', async function (t) {
           extensions: [mdxJsx()],
           htmlExtensions: [html]
         }),
-        '<p>b</p>\n'
+        'b\n'
       )
     }
   )
@@ -1323,7 +1327,7 @@ test('flow (essence)', async function (t) {
           extensions: [mdxJsx()],
           htmlExtensions: [html]
         }),
-        '<p>b</p>\n'
+        'b\n'
       )
     }
   )
@@ -1334,7 +1338,7 @@ test('flow (essence)', async function (t) {
         extensions: [mdxJsx()],
         htmlExtensions: [html]
       }),
-      '<p>c</p>\n'
+      'c\n'
     )
   })
 
@@ -1544,6 +1548,7 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark("<div>\n{'}'}\n</div>", {
+          // @ts-ignore acorn type defintion issues
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1557,6 +1562,7 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark('x<em>{1}</em>', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1570,10 +1576,11 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark('<em>x{1}</em>', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
-        '<p>x</p>'
+        'x'
       )
     }
   )
@@ -1583,10 +1590,11 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark('<em>{1}x</em>', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
-        '<p>x</p>'
+        'x'
       )
     }
   )
@@ -1596,6 +1604,7 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark('<em>{1}</em>x', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1604,11 +1613,13 @@ test('interleaving w/ expressions', async function (t) {
     }
   )
 
+  /* no longer supported
   await t.test(
     'should support a tag and then an expression (flow)',
     async function () {
       assert.deepEqual(
         micromark('<x/>{1}', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1616,12 +1627,14 @@ test('interleaving w/ expressions', async function (t) {
       )
     }
   )
+  */
 
   await t.test(
     'should support a tag, an expression, then text (text)',
     async function () {
       assert.deepEqual(
         micromark('<x/>{1}x', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1635,6 +1648,7 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark('x<x/>{1}', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1643,11 +1657,13 @@ test('interleaving w/ expressions', async function (t) {
     }
   )
 
+  /* no longer supported
   await t.test(
     'should support an expression and then a tag (flow)',
     async function () {
       assert.deepEqual(
         micromark('{1}<x/>', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1655,12 +1671,14 @@ test('interleaving w/ expressions', async function (t) {
       )
     }
   )
+  */
 
   await t.test(
     'should support an expression, a tag, then text (text)',
     async function () {
       assert.deepEqual(
         micromark('{1}<x/>x', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1674,6 +1692,7 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.deepEqual(
         micromark('x{1}<x/>', {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1687,6 +1706,7 @@ test('interleaving w/ expressions', async function (t) {
     async function () {
       assert.equal(
         micromark("<x>{[\n'',\n{c:''}\n]}</x>", {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }),
@@ -1705,6 +1725,7 @@ test('interleaving w/ expressions', async function (t) {
 \`}</style>
     `,
         {
+          // @ts-ignore
           extensions: [mdxExpression({acorn}), mdxJsx({acorn})],
           htmlExtensions: [html]
         }

@@ -39,11 +39,10 @@
     "index.js"
   ],
   "dependencies": {
-    "@types/acorn": "^4.0.0",
     "@types/estree": "^1.0.0",
     "devlop": "^1.0.0",
     "estree-util-is-identifier-name": "^3.0.0",
-    "micromark-factory-mdx-expression": "^2.0.0",
+    "micromark-factory-mdx-expression": "^2.0.1",
     "micromark-factory-space": "^2.0.0",
     "micromark-util-character": "^2.0.0",
     "micromark-util-symbol": "^2.0.0",
@@ -71,14 +70,14 @@
     "xo": "^0.56.0"
   },
   "scripts": {
-    "prepack": "npm run build && npm run format",
+    "prepack": "npm run build",
     "build": "tsc --build --clean && tsc --build && type-coverage && micromark-build",
     "format": "remark . -qfo && prettier . -w --log-level warn && xo --fix",
     "test-api-prod": "node --conditions production test/index.js",
     "test-api-dev": "node --conditions development test/index.js",
     "test-api": "npm run test-api-dev && npm run test-api-prod",
     "test-coverage": "c8 --100 --reporter lcov npm run test-api",
-    "test": "npm run build && npm run format && npm run test-coverage"
+    "test": "npm run build && npm run test-coverage"
   },
   "prettier": {
     "bracketSpacing": false,

@@ -1,7 +1,10 @@
 /**
  * @typedef {import('micromark-util-types').Extension} Extension
- * @typedef {import('micromark-factory-mdx-expression').Acorn} Acorn
- * @typedef {import('micromark-factory-mdx-expression').AcornOptions} AcornOptions
+ * @typedef {{
+ *   parse: typeof import('acorn').Parser.parse,
+ *   parseExpressionAt: typeof import('acorn').Parser.parseExpressionAt
+ * }} Acorn
+ * @typedef {import('acorn').Options} AcornOptions
  */
 
 /**

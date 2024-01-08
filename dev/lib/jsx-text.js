@@ -1,6 +1,6 @@
 /**
- * @typedef {import('micromark-factory-mdx-expression').Acorn} Acorn
- * @typedef {import('micromark-factory-mdx-expression').AcornOptions} AcornOptions
+ * @typedef {import('./syntax.js').Acorn} Acorn
+ * @typedef {import('acorn').Options} AcornOptions
  * @typedef {import('micromark-util-types').Construct} Construct
  * @typedef {import('micromark-util-types').TokenizeContext} TokenizeContext
  * @typedef {import('micromark-util-types').Tokenizer} Tokenizer

@@ -1,6 +1,7 @@
 import type {Program} from 'estree'
 
 export {mdxJsx, type Options} from './lib/syntax.js'
+export {mdastExtraJsxFlow} from './index.js'
 
 declare module 'micromark-util-types' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -12,6 +13,7 @@ declare module 'micromark-util-types' {
   interface TokenTypeMap {
     esWhitespace: 'esWhitespace'
 
+    mdxJsxFlowBlock: 'mdxJsxFlowBlock'
     mdxJsxFlowTag: 'mdxJsxFlowTag'
     mdxJsxFlowTagMarker: 'mdxJsxFlowTagMarker'
     mdxJsxFlowTagClosingMarker: 'mdxJsxFlowTagClosingMarker'
