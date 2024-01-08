@@ -32,6 +32,56 @@ export default function parse(input: string): MarkdownRoot {
 }
 ```
 
+## What is changed?
+
+Flow-level JSX no longer wraps its children in paragraphs. Inline-level markdown
+is still allowed within flow JSX. To use paragraph wrapping, simply leave a
+blank line after a flow JSX element, as in CommonMark.
+
+```md
+<span class="test">
+  **Test:** A potato.
+</span>
+
+... becomes ...
+
+<span class="test">
+  <strong>Test:</strong> A potato.
+</span>
+```
+
+```md
+This does not work:
+
+<div>
+  - item 1
+    test
+  - item 2
+</div>
+
+Add a blank line instead:
+
+<div>
+
+- item 1
+  test
+- item 2
+
+</div>
+
+... becomes ...
+
+<div>
+  <ul>
+    <li>
+      item 1
+      test
+    </li>
+    <li>item 2</li>
+  </ul>
+</div>
+```
+
 The original readme is reproduced below.
 
 # micromark-extension-mdx-jsx
