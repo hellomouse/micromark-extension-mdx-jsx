@@ -12,7 +12,7 @@ import {Parser} from 'acorn'
 import acornJsx from 'acorn-jsx'
 import {visit} from 'estree-util-visit'
 import {micromark} from 'micromark'
-import {mdxJsx} from 'micromark-extension-mdx-jsx'
+import {mdxJsx} from '@hellomouse/micromark-extension-mdx-jsx'
 import {mdxExpression} from 'micromark-extension-mdx-expression'
 
 const acorn = Parser.extend(acornJsx())
@@ -43,7 +43,7 @@ function end() {
 test('core', async function (t) {
   await t.test('should expose the public api', async function () {
     assert.deepEqual(
-      Object.keys(await import('micromark-extension-mdx-jsx')).sort(),
+      Object.keys(await import('@hellomouse/micromark-extension-mdx-jsx')).sort(),
       ['mdastExtraJsxFlow', 'mdxJsx']
     )
   })

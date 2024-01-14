@@ -1,6 +1,6 @@
 {
-  "name": "micromark-extension-mdx-jsx",
-  "version": "3.0.0",
+  "name": "@hellomouse/micromark-extension-mdx-jsx",
+  "version": "0.1.1",
   "description": "micromark extension to support MDX or MDX.js JSX",
   "license": "MIT",
   "keywords": [
@@ -16,15 +16,16 @@
     "markdown",
     "unified"
   ],
-  "repository": "micromark/micromark-extension-mdx-jsx",
-  "bugs": "https://github.com/micromark/micromark-extension-mdx-jsx/issues",
+  "repository": "hellomouse/micromark-extension-mdx-jsx",
+  "bugs": "https://github.com/hellomouse/micromark-extension-mdx-jsx",
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/unified"
   },
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
   "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+    "iczero <iczero@hellomouse.net>"
   ],
   "sideEffects": false,
   "type": "module",
