@@ -13,7 +13,6 @@ declare module 'micromark-util-types' {
   interface TokenTypeMap {
     esWhitespace: 'esWhitespace'
 
-    mdxJsxFlowBlock: 'mdxJsxFlowBlock'
     mdxJsxFlowTag: 'mdxJsxFlowTag'
     mdxJsxFlowTagMarker: 'mdxJsxFlowTagMarker'
     mdxJsxFlowTagClosingMarker: 'mdxJsxFlowTagClosingMarker'

@@ -94,7 +94,6 @@ export function jsxFlow(acorn, options) {
      * @type {State}
      */
     function start(code) {
-      effects.enter('mdxJsxFlowBlock');
       return effects.attempt(jsxFlowTag, afterTag, nok)(code);
     }
 
@@ -109,18 +108,28 @@ export function jsxFlow(acorn, options) {
      * @type {State}
      */
     function afterTag(code) {
-      if (markdownSpace(code)) {
-        return factorySpace(effects, afterTag, types.lineSuffix)(code);
-      } else if (markdownLineEnding(code)) {
-        effects.enter('lineEnding');
-        effects.consume(code);
-        effects.exit('lineEnding');
-        return afterTagLineEnding;
-      } else if (code === codes.eof) {
-        return end(code);
-      } else {
-        return maybeConstruct(code);
-      }
+      // try to eat spaces and then a newline or eof, or reparse as text
+      return effects.attempt({
+        tokenize(effects, ok, nok) {
+          return tryLine;
+
+          /** @type {State} */
+          function tryLine(code) {
+            if (markdownSpace(code)) {
+              return factorySpace(effects, tryLine, types.lineSuffix)(code);
+            } else if (markdownLineEnding(code)) {
+              effects.enter('lineEnding');
+              effects.consume(code);
+              effects.exit('lineEnding');
+              return ok;
+            } else if (code === codes.eof) {
+              return ok(code);
+            } else {
+              return nok(code);
+            }
+          }
+        }
+      }, afterTagLineEnding, maybeConstruct)(code);
     }
 
     /**
@@ -303,7 +312,6 @@ export function jsxFlow(acorn, options) {
      * @type {State}
      */
     function end(code) {
-      effects.exit('mdxJsxFlowBlock');
       return ok(code);
     }
   }
