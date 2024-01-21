@@ -70,3 +70,7 @@ export function mdxJsx(options) {
     }
   }
 }
+
+export function mdastExtraJsxFlow() {
+  return { canContainEols: ['mdxJsxFlowElement'] };
+};
